@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Samaya Aruda Calculator</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f5f5f5;
+    padding:20px;
+    margin:0;
+}
+
+h2{
+    text-align:center;
+}
+
+input, select, button{
+    padding:12px;
+    font-size:18px;
+    margin:5px 0;
+}
+
+button{
+    cursor:pointer;
+}
+
+#result{
+    margin-top:20px;
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    font-size:20px;
+    line-height:1.6;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Samaya Aruda Calculator</h2>
+
+<label>Time (HH:MM)</label><br>
+<input type="time" id="timeInput"><br><br>
+
+<label>Sun Sign</label><br>
+<select id="sunSign">
+    <option value="1">♈ Aries</option>
+    <option value="2">♉ Taurus</option>
+    <option value="3">♊ Gemini</option>
+    <option value="4">♋ Cancer</option>
+    <option value="5">♌ Leo</option>
+    <option value="6">♍ Virgo</option>
+    <option value="7">♎ Libra</option>
+    <option value="8">♏ Scorpio</option>
+    <option value="9">♐ Sagittarius</option>
+    <option value="10">♑ Capricorn</option>
+    <option value="11">♒ Aquarius</option>
+    <option value="12">♓ Pisces</option>
+</select>
+
+<br><br>
+
+<button onclick="calculate()">Calculate</button>
+
+<div id="result"></div>
+
+<script>
+
+const signs = [
+"♈ Aries",
+"♉ Taurus",
+"♊ Gemini",
+"♋ Cancer",
+"♌ Leo",
+"♍ Virgo",
+"♎ Libra",
+"♏ Scorpio",
+"♐ Sagittarius",
+"♑ Capricorn",
+"♒ Aquarius",
+"♓ Pisces"
+];
+
+function getVithi(sun){
+    if ([2,3,4,5].includes(sun)) return 1; // Aries
+    if ([6,7,12,1].includes(sun)) return 2; // Taurus
+    return 3; // Gemini
+}
+
+function calculate(){
+
+    let time = document.getElementById("timeInput").value;
+
+    if(time === ""){
+        document.getElementById("result").innerHTML =
+        "Please select a time.";
+        return;
+    }
+
+    let parts = time.split(":");
+    let hour = parseInt(parts[0]);
+    let minute = parseInt(parts[1]);
+
+    let sunSign =
+        parseInt(document.getElementById("sunSign").value);
+
+    // Samaya Udaya
+    let udaya;
+
+    if(hour === 0){
+        udaya = 12;
+    }else if(hour <= 12){
+        udaya = hour;
+    }else{
+        udaya = hour - 12;
+    }
+
+    // Samaya Aruda
+    let aruda;
+
+    if (minute <= 5) aruda = 1;
+    else if (minute <= 10) aruda = 2;
+    else if (minute <= 15) aruda = 3;
+    else if (minute <= 20) aruda = 4;
+    else if (minute <= 25) aruda = 5;
+    else if (minute <= 30) aruda = 6;
+    else if (minute <= 35) aruda = 7;
+    else if (minute <= 40) aruda = 8;
+    else if (minute <= 45) aruda = 9;
+    else if (minute <= 50) aruda = 10;
+    else if (minute <= 55) aruda = 11;
+    else aruda = 12;
+
+    let distance =
+        (udaya - aruda + 12) % 12 + 1;
+
+    let proceed =
+        [3,6,8,12].includes(distance);
+
+    let vithi = getVithi(sunSign);
+
+    let count =
+        (udaya - aruda + 12) % 12;
+
+    let chattra =
+        ((vithi - 1 + count) % 12) + 1;
+
+    document.getElementById("result").innerHTML =
+        "<b>Samaya Aruda:</b> " + signs[aruda - 1] + "<br>" +
+        "<b>Samaya Udaya:</b> " + signs[udaya - 1] + "<br>" +
+        "<b>Distance:</b> " + distance + "<br>" +
+        "<b>Status:</b> " +
+        (proceed ? "✅ Blocked " : " ✅ Proceed") +
+        "<br><br>" +
+        "<b>Vithi Rashi:</b> " + signs[vithi - 1] + "<br>" +
+        "<b>Chattra Rashi:</b> " + signs[chattra - 1];
+}
+
+</script>
+
+</body>
+</html>
